@@ -1,16 +1,16 @@
 defmodule Advent.Day1 do
   @directions [:north, :west, :south, :east]
   @doc """
-  iex> Advent.Day1.distance("R2, L3")
+  iex> Advent.Day1.final_distance("R2, L3")
   5
 
-  iex> Advent.Day1.distance("R2, R2, R2")
+  iex> Advent.Day1.final_distance("R2, R2, R2")
   2
 
-  iex> Advent.Day1.distance("R5, L5, R5, R3")
+  iex> Advent.Day1.final_distance("R5, L5, R5, R3")
   12
   """
-  def distance(input) do
+  def final_distance(input) do
     input
     |> parse_input
     |> calculate_final_position({0, 0}, :north)
@@ -24,46 +24,44 @@ defmodule Advent.Day1 do
   def hq_distance(input) do
     input
     |> parse_input
-    |> calculate_hq_location({0, 0}, :north, MapSet.new)
+    |> calculate_hq_position({0, 0}, :north, MapSet.new)
     |> calculate_distance
   end
 
-  defp calculate_final_position([], position, _), do: position
+  defp calculate_final_position([], position, _facing), do: position
   defp calculate_final_position([move | moves], position, facing) do
-    {turn, length} = move_details(move)
-    new_facing = make_turn(facing, turn)
-    new_position = move(position, new_facing, length)
-    calculate_final_position(moves, new_position, new_facing)
+    {position, facing} = make_move(move, position, facing)
+    calculate_final_position(moves, position, facing)
   end
 
   defp calculate_distance({x, y}), do: abs(x) + abs(y)
 
-  defp move_details(<<turn::binary-size(1), length::binary>>) do
-    {turn, String.to_integer(length)}
+  defp calculate_hq_position([], _, _, _), do: raise("No HQ found")
+  defp calculate_hq_position([{_turn, length}=move | moves], position, facing, visited) when length > 1 do
+    generate_steps(moves, move)
+    |> calculate_hq_position(position, facing, visited)
   end
+  defp calculate_hq_position([move | moves], position, facing, visited) do
+    {position, facing} = make_move(move, position, facing)
 
-  defp calculate_hq_location([], _, _, _), do: raise("No HQ found")
-  defp calculate_hq_location([move | moves], position, facing, visited) do
-    {turn, length} = move_details(move)
-
-    if length > 1 do
-      calculate_hq_location(split_moves(moves, {turn, length}), position, facing, visited)
-    else
-      new_facing = make_turn(facing, turn)
-      new_position = move(position, new_facing, length)
-
-      if MapSet.member?(visited, new_position) do
-        new_position
-      else
-        visited = MapSet.put(visited, new_position)
-        calculate_hq_location(moves, new_position, new_facing, visited)
-      end
+    case MapSet.member?(visited, position) do
+      true -> position
+      false ->
+        visited = MapSet.put(visited, position)
+        calculate_hq_position(moves, position, facing, visited)
     end
   end
 
-  defp split_moves(moves, {turn, 1}), do: ["#{turn}1" | moves]
-  defp split_moves(moves, {turn, length}) do
-    split_moves(["S1"|moves], {turn, length-1})
+  defp generate_steps(moves, {turn, 1}), do: [{turn, 1} | moves]
+  defp generate_steps(moves, {turn, length}) do
+    # "S" is a new "straight" move, ie: no turn
+    generate_steps([{"S", 1} | moves], {turn, length-1})
+  end
+
+  defp make_move({turn, length}, position, facing) do
+    facing = make_turn(facing, turn)
+    position = move(position, facing, length)
+    {position, facing}
   end
 
   @doc """
@@ -99,5 +97,6 @@ defmodule Advent.Day1 do
     input
     |> String.trim
     |> String.split(", ")
+    |> Enum.map(fn(<<turn::binary-size(1), length::binary>>) -> {turn, String.to_integer(length)} end)
   end
 end
