@@ -23,14 +23,11 @@ defmodule Advent.Day2 do
 
   defp calculate_bathroom_code(input, keypad) do
     input
-    |> Enum.map_reduce(@starting_position, fn(move, position) ->
-        position = move
+    |> Enum.scan(@starting_position, fn(move, position) ->
+        move
         |> String.to_charlist
         |> calculate_digit(position, keypad)
-
-        {position, position}
       end)
-    |> elem(0) # We don't care about the final accumulator value
     |> List.to_string
   end
 
