@@ -1,5 +1,6 @@
 defmodule Advent.Day5 do
   @input "uqwqemis"
+  @password_length 8
 
   @doc """
   iex> Advent.Day5.basic_password("abc")
@@ -9,13 +10,39 @@ defmodule Advent.Day5 do
     brute_force(input, 0, "")
   end
 
-  defp brute_force(_input, _counter, <<password::binary-size(8)>>), do: String.reverse(password)
+  @doc """
+  iex> Advent.Day5.complex_password("abc")
+  "05ACE8E3"
+  """
+  def complex_password(input \\ @input) do
+    complex_brute_force(input, 0, %{})
+  end
+
+  defp brute_force(_input, _counter, <<password::binary-size(@password_length)>>), do: String.reverse(password)
   defp brute_force(input, counter, password) do
     password = case :crypto.hash(:md5, "#{input}#{counter}") |> Base.encode16 do
-      <<"00000", rest::binary>> -> String.first(rest) <> password
-      _                         -> password
+      <<"00000", char::binary-size(1), _rest::binary>> -> char <> password
+      _ -> password
     end
 
     brute_force(input, counter+1, password)
+  end
+
+  defp complex_brute_force(_input, _counter, password) when map_size(password) == @password_length do
+    password
+    |> Enum.sort
+    |> Enum.map(fn({_pos, val}) -> val end)
+    |> to_string
+  end
+
+  defp complex_brute_force(input, counter, password) do
+    password = case :crypto.hash(:md5, "#{input}#{counter}") |> Base.encode16 do
+      <<"00000", position::binary-size(1), char::binary-size(1), _rest::binary>>
+      when position in ["0", "1", "2", "3", "4", "5", "6", "7"] ->
+        Map.put_new(password, position, char)
+      _ -> password
+    end
+
+    complex_brute_force(input, counter+1, password)
   end
 end
