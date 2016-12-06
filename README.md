@@ -1,24 +1,7 @@
-# Advent
+# Advent Of Code
 
-**TODO: Add description**
+[![Build Status](https://travis-ci.org/sevenseacat/advent_of_code_2016.svg?branch=master)](https://travis-ci.org/sevenseacat/advent_of_code_2016)
 
-## Installation
+My solutions (in Elixir) to the 2016 [Advent of Code](http://adventofcode.com/2016).
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed as:
-
-  1. Add `advent` to your list of dependencies in `mix.exs`:
-
-    ```elixir
-    def deps do
-      [{:advent, "~> 0.1.0"}]
-    end
-    ```
-
-  2. Ensure `advent` is started before your application:
-
-    ```elixir
-    def application do
-      [applications: [:advent]]
-    end
-    ```
-
+I am not an Elixir master but I am having fun and you should do them too!
