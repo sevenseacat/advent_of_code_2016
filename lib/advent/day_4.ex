@@ -7,6 +7,38 @@ defmodule Advent.Day4 do
     |> Enum.sum
   end
 
+  def north_pole_rooms do
+    list_from_file
+    |> Stream.map(&parse_room_details/1)
+    |> Stream.map(&({decode_name(&1), &1["sector"]}))
+    |> Enum.find("", fn({name, _}) -> String.match?(name, ~r/north/) end)
+  end
+
+  @doc """
+  iex> Advent.Day4.decode_name(%{"name" => "qzmt-zixmtkozy-ivhz", "sector" => 343})
+  "very encrypted name"
+  """
+  def decode_name(room) do
+    room["name"]
+    |> to_charlist
+    |> decode_letters(room["sector"])
+    |> to_string
+  end
+
+  def decode_letters([], _), do: []
+  def decode_letters([letter|letters], cipher) do
+    [ decode_letter(letter, cipher) | decode_letters(letters, cipher) ]
+  end
+
+  def decode_letter(?-, _), do: ' '
+  def decode_letter(letter, cipher) do
+    new_letter = letter+rem(cipher, 26)
+    case new_letter > ?z do
+      true -> new_letter - 26
+      false -> new_letter
+    end
+  end
+
   def list_from_file do
     File.read!("test/fixtures/day_4") |> String.split
   end
