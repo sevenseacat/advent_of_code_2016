@@ -37,8 +37,7 @@ defmodule Advent.Day5 do
 
   defp complex_brute_force(input, counter, password) do
     password = case :crypto.hash(:md5, "#{input}#{counter}") |> Base.encode16 do
-      <<"00000", position::binary-size(1), char::binary-size(1), _rest::binary>>
-      when position in ["0", "1", "2", "3", "4", "5", "6", "7"] ->
+      <<"00000", position::binary-size(1), char::binary-size(1), _rest::binary>> when position <= "7" ->
         Map.put_new(password, position, char)
       _ -> password
     end
