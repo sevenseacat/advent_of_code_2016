@@ -5,7 +5,7 @@ defmodule Advent.Day3 do
   end
 
   @doc """
-  Returns a sorted list of triangle sides.
+  Returns a list of triangle sides.
 
   iex> Advent.Day3.input("3 4 5 6 7 8 9 10 11", &Advent.Day3.horizontal_chunk/1)
   [[3,4,5], [6,7,8], [9,10,11]]
@@ -19,12 +19,11 @@ defmodule Advent.Day3 do
     |> String.split
     |> Enum.map(&(String.to_integer(&1)))
     |> fun.()
-    |> Enum.map(&(Enum.sort(&1)))
   end
 
   def horizontal_chunk(list) do
     list
-    |> Stream.chunk(3)
+    |> Enum.chunk(3)
   end
 
   def vertical_chunk(list) do
