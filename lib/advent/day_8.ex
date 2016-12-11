@@ -93,10 +93,14 @@ defmodule Advent.Day8 do
     [ new_line | process_column_rotate_lines(lines, chars, column_no)]
   end
 
-  defp blank_screen(width, height) do
-    for _i <- 1..height do
-      (for _i <- 1..width, do: ".") |> to_string
-    end
+  @doc """
+  iex> Advent.Day8.blank_screen(3, 2)
+  ["...", "..."]
+  """
+  def blank_screen(width, height) do
+    "."
+    |> String.duplicate(width)
+    |> List.duplicate(height)
   end
 
   defp rotate_string(string, char_count) do
