@@ -25,11 +25,45 @@ defmodule Advent.Day9 do
     end
   end
 
+  @doc """
+  iex> Advent.Day9.advanced_decompress_length("(3x3)XYZ")
+  9 # XYZXYZYZ
+
+  iex> Advent.Day9.advanced_decompress_length("X(8x2)(3x3)ABCY")
+  20 # -> XABCABCABCABCABCABCY
+
+  iex> Advent.Day9.advanced_decompress_length("(27x12)(20x12)(13x14)(7x10)(1x12)A")
+  241920 # "A" * 241920
+
+  iex> Advent.Day9.advanced_decompress_length("(25x3)(3x3)ABC(2x3)XY(5x2)PQRSTX(18x9)(3x2)TWO(5x7)SEVEN")
+  445
+  """
+  def advanced_decompress_length(string) do
+    case String.split(string, "(", parts: 2) do
+      [string] ->
+        String.length(string)
+      [content, string] ->
+        String.length(content) + length_via_marker_duplication(string)
+    end
+  end
+
+  defp length_via_marker_duplication(string) do
+    case String.split(string, ")", parts: 2) do
+      [string] -> String.length(string)
+      [marker, string] ->
+        [dup_length, dup_count] = decode_marker(marker)
+
+        {content_to_dup, rest} = String.split_at(string, dup_length)
+        (String.duplicate(content_to_dup, dup_count) <> rest)
+        |> advanced_decompress_length
+    end
+  end
+
   defp duplicate_via_marker(string) do
     case String.split(string, ")", parts: 2) do
       [string] -> string
       [marker, string] ->
-        [dup_length, dup_count] = String.split(marker, "x") |> Enum.map(&String.to_integer/1)
+        [dup_length, dup_count] = decode_marker(marker)
 
         {content_to_dup, rest} = String.split_at(string, dup_length)
         String.duplicate(content_to_dup, dup_count) <> decompress(rest)
@@ -39,4 +73,6 @@ defmodule Advent.Day9 do
   def input do
     File.read!("test/fixtures/day_9") |> String.trim
   end
+
+  defp decode_marker(marker), do: String.split(marker, "x") |> Enum.map(&String.to_integer/1)
 end
