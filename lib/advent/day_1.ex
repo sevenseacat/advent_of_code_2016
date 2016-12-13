@@ -65,25 +65,25 @@ defmodule Advent.Day1 do
 
   @doc """
   iex> Advent.Day1.turn(:north, "L")
-  :east
-
-  iex> Advent.Day1.turn(:north, "R")
   :west
 
+  iex> Advent.Day1.turn(:north, "R")
+  :east
+
   iex> Advent.Day1.turn(:west, "L")
-  :north
+  :south
 
   iex> Advent.Day1.turn(:west, "R")
-  :south
+  :north
   """
-  def turn(:north, "L"), do: :east
-  def turn(:north, "R"), do: :west
-  def turn(:south, "L"), do: :west
-  def turn(:south, "R"), do: :east
-  def turn(:east,  "L"), do: :south
-  def turn(:east,  "R"), do: :north
-  def turn(:west,  "L"), do: :north
-  def turn(:west,  "R"), do: :south
+  def turn(:north, "L"), do: :west
+  def turn(:north, "R"), do: :east
+  def turn(:south, "L"), do: :east
+  def turn(:south, "R"), do: :west
+  def turn(:east,  "L"), do: :north
+  def turn(:east,  "R"), do: :south
+  def turn(:west,  "L"), do: :south
+  def turn(:west,  "R"), do: :north
   def turn(dir,    "S"), do: dir
 
   defp move({x, y}, :north, length), do: {x, y+length}
