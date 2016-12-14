@@ -60,7 +60,7 @@ defmodule Advent.Day11.State do
   @doc """
   See the test file for a test of this - too big for a doctest.
   """
-  def legal_moves(%State{floors: floors, elevator: elevator}=state) do
+  def legal_moves(%State{elevator: elevator}=state) do
     Enum.map(Elevator.valid_moves(state), fn(new_elevator_pos) ->
       get_floor(state, elevator)
       |> Floor.item_combinations
