@@ -7,6 +7,12 @@ defmodule Advent.Day11 do
     |> length
   end
 
+  def part2 do
+    State.part2_initial
+    |> get_optimal_path
+    |> length
+  end
+
   @doc """
   This is the actual breadth-first search part. ie. the point of the puzzle.
   """

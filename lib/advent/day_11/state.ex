@@ -10,6 +10,10 @@ defmodule Advent.Day11.State do
     Code.eval_file("test/fixtures/day_11") |> elem(0)
   end
 
+  def part2_initial do
+    Code.eval_file("test/fixtures/day_11_part_2") |> elem(0)
+  end
+
   @doc """
   iex> State.legal?(%State{floors: [
   ...>  %Floor{number: 1, chips: [:s], generators: [:s]}

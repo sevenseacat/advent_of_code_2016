@@ -1,0 +1,9 @@
+%Advent.Day11.State{
+  elevator: 1,
+  floors: [
+    %Advent.Day11.Floor{number: 4, chips: [], generators: []},
+    %Advent.Day11.Floor{number: 3, chips: [:thulium], generators: []},
+    %Advent.Day11.Floor{number: 2, chips: [:ruthenium, :curium], generators: [:thulium, :ruthenium, :curium]},
+    %Advent.Day11.Floor{number: 1, chips: [:strontium, :plutonium, :elerium, :dilithium], generators: [:strontium, :plutonium, :elerium, :dilithium]}
+  ]
+}
