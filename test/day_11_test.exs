@@ -1,6 +1,7 @@
 defmodule Advent.Day11Test do
   use ExUnit.Case
 
+  alias Advent.Day11
   alias Advent.Day11.{State, Floor}
 
   doctest Advent.Day11
@@ -56,7 +57,7 @@ defmodule Advent.Day11Test do
       %State{elevator: 3, floors: [
         %Floor{number: 1, chips: [], generators: []},
         %Floor{number: 2, chips: [:r, :s], generators: []},
-        %Floor{number: 3, chips: [], generators: [:r, :s]}]},
+        %Floor{number: 3, chips: [], generators: [:r, :s]}]}
     ]
 
     actual_states = State.legal_moves(%State{elevator: 2, floors: [
@@ -68,5 +69,18 @@ defmodule Advent.Day11Test do
     Enum.each(actual_states, fn(state) ->
       assert state in expected_states
     end)
+  end
+
+  test "running an actual scenario for a given initial state and returning a path length" do
+    # This is from the example in the puzzle itself.
+    initial_state = %State{elevator: 1, floors: [
+      %Floor{number: 1, chips: [:h, :l], generators: []},
+      %Floor{number: 2, chips: [], generators: [:h]},
+      %Floor{number: 3, chips: [], generators: [:l]},
+      %Floor{number: 4, chips: [], generators: []}
+    ]}
+
+    actual_path = Day11.get_optimal_path(initial_state)
+    assert length(actual_path) == 11
   end
 end
