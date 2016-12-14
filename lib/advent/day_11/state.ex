@@ -11,18 +11,18 @@ defmodule Advent.Day11.State do
   end
 
   @doc """
-  iex> Advent.Day11.State.legal?(%Advent.Day11.State{floors: [
-  ...>  %Advent.Day11.Floor{number: 1, chips: [:s], generators: [:s]}
+  iex> State.legal?(%State{floors: [
+  ...>  %Floor{number: 1, chips: [:s], generators: [:s]}
   ...> ]})
   true
 
-  iex> Advent.Day11.State.legal?(%Advent.Day11.State{floors: [
-  ...>  %Advent.Day11.Floor{number: 1, chips: [:s, :r], generators: [:s]}
+  iex> State.legal?(%State{floors: [
+  ...>  %Floor{number: 1, chips: [:s, :r], generators: [:s]}
   ...> ]})
   false # R chip is fried by S generator
 
-  iex> Advent.Day11.State.legal?(%Advent.Day11.State{floors: [
-  ...>  %Advent.Day11.Floor{number: 1, chips: [:s], generators: [:s, :r]}
+  iex> State.legal?(%State{floors: [
+  ...>  %Floor{number: 1, chips: [:s], generators: [:s, :r]}
   ...> ]})
   true
   """
@@ -31,20 +31,20 @@ defmodule Advent.Day11.State do
   end
 
   @doc """
-  iex> Advent.Day11.State.winning?(%Advent.Day11.State{elevator: 1, floors: [
-  ...>  %Advent.Day11.Floor{number: 4, chips: [:s], generators: [:s, :r]}
+  iex> State.winning?(%State{elevator: 1, floors: [
+  ...>  %Floor{number: 4, chips: [:s], generators: [:s, :r]}
   ...> ]})
   false
 
-  iex> Advent.Day11.State.winning?(%Advent.Day11.State{elevator: 4, floors: [
-  ...>  %Advent.Day11.Floor{number: 4, chips: [:r, :s], generators: [:s, :r]},
-  ...>  %Advent.Day11.Floor{number: 3, chips: [], generators: []}
+  iex> State.winning?(%State{elevator: 4, floors: [
+  ...>  %Floor{number: 4, chips: [:r, :s], generators: [:s, :r]},
+  ...>  %Floor{number: 3, chips: [], generators: []}
   ...> ]})
   true
 
-  iex> Advent.Day11.State.winning?(%Advent.Day11.State{elevator: 1, floors: [
-  ...>  %Advent.Day11.Floor{number: 4, chips: [:r, :c], generators: [:s, :r]},
-  ...>  %Advent.Day11.Floor{number: 3, chips: [], generators: []}
+  iex> State.winning?(%State{elevator: 1, floors: [
+  ...>  %Floor{number: 4, chips: [:r, :c], generators: [:s, :r]},
+  ...>  %Floor{number: 3, chips: [], generators: []}
   ...> ]})
   false
   """

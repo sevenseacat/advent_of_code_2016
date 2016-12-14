@@ -1,11 +1,12 @@
 defmodule Advent.Day11Test do
   use ExUnit.Case
-  doctest Advent.Day11
-  doctest Advent.Day11.State
-  doctest Advent.Day11.Floor
 
   alias Advent.Day11
   alias Advent.Day11.{State, Floor}
+
+  doctest Advent.Day11
+  doctest Advent.Day11.State
+  doctest Advent.Day11.Floor
 
   test "calculating legal moves for a given state" do
     expected = [

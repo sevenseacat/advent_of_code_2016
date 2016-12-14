@@ -18,8 +18,7 @@ defmodule Advent.Day11.Floor do
   There's got to be a quicker way to do this. But for now, it works.
   Generates a list of all the options available for moving from a given floor.
 
-  iex> Advent.Day11.Floor.item_combinations(
-  ...>  %Advent.Day11.Floor{chips: [:t, :u], generators: [:v, :w]})
+  iex> Floor.item_combinations(%Floor{chips: [:t, :u], generators: [:v, :w]})
   [
     %{chips: [:t, :u], generators: []},
     %{chips: [:t], generators: [:v]},
