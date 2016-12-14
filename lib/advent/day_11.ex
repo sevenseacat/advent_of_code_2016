@@ -1,5 +1,5 @@
 defmodule Advent.Day11 do
-  @winning_floor :f4
+  alias Advent.Day11.State
 
   @doc """
   See the test file for tests - too long to use doctests for.
@@ -12,53 +12,8 @@ defmodule Advent.Day11 do
       end)
     end)
     |> List.flatten
-    |> Enum.filter(&legal_state?/1)
+    |> Enum.filter(&State.legal?/1)
   end
-
-  def initial_state do
-    Code.eval_file("test/fixtures/day_11") |> elem(0)
-  end
-
-  @doc """
-  iex> Advent.Day11.legal_state?({[f1: {[:s], [:s]}], :f1})
-  true
-
-  iex> Advent.Day11.legal_state?({[f1: {[:s, :r], [:s]}], :f1})
-  false # r chip is fried
-
-  iex> Advent.Day11.legal_state?({[f1: {[:s], [:s, :r]}], :f1})
-  true
-  """
-  def legal_state?({positions, _elevator}) do
-    Enum.all?(positions, &legal_floor_state?/1)
-  end
-
-  @doc """
-  iex> Advent.Day11.winning_state?({[f4: {[:s], [:s, :r]}], :f1})
-  false
-
-  iex> Advent.Day11.winning_state?({[f4: {[:r, :s], [:s, :r]}, f3: {[], []}], :f4})
-  true
-
-  iex> Advent.Day11.winning_state?({[f4: {[:r, :c], [:s, :r]}, f3: {[], []}], :f1})
-  false
-  """
-  def winning_state?({_positions, elevator}) when elevator != @winning_floor, do: false
-  def winning_state?({positions, _elevator}) do
-    Enum.all?(positions, &winning_floor_state?/1)
-  end
-
-  def legal_floor_state?({_floor, {_chips, []}}), do: true
-  def legal_floor_state?({_floor, {chips, generators}}) do
-    chips
-    |> Enum.all?(fn(chip) -> Enum.member?(generators, chip) end)
-  end
-
-  def winning_floor_state?({floor, {chips, generators}}) when floor == @winning_floor do
-     Enum.sort(chips) == Enum.sort(generators)
-  end
-  def winning_floor_state?({floor, {[], []}}) when floor != @winning_floor, do: true
-  def winning_floor_state?(_), do: false
 
   @doc """
   iex> Advent.Day11.possible_elevator_positions({[f1: [], f2: []], :f1})
@@ -86,7 +41,6 @@ defmodule Advent.Day11 do
     (Enum.map(chips, &({:chip, &1})) ++ Enum.map(generators, &({:generator, &1})))
     |> permutations_of_size(2)
     |> Enum.map(&Enum.sort/1)
-    |> IO.inspect
     |> Enum.map(fn(list) -> Enum.group_by(list, fn({type, value}) -> value end) end)
     |> Enum.uniq
   end
