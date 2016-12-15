@@ -4,9 +4,7 @@ defmodule Benchmark do
   Source: http://stackoverflow.com/a/29674651/560215
   """
   def measure(function) do
-    function
-    |> :timer.tc
-    |> elem(0)
-    |> Kernel./(1_000_000)
+    {time, result} = :timer.tc(function)
+    {"#{time/(1_000_000)}sec", result}
   end
 end
