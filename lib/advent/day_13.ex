@@ -12,12 +12,12 @@ defmodule Advent.Day13 do
   This is the actual breadth-first search part. ie. the point of the puzzle.
   """
   def get_optimal_path(initial, destination, magic_number) do
-    do_search([{[], Position.legal_moves(initial, magic_number)}], [], destination, magic_number, %{})
+    do_search([{[], Position.legal_moves(initial, magic_number)}], [], destination, magic_number, empty_visited_list)
   end
 
   # Reached the end of a level. Start going through allll the positions on the next level.
   defp do_search([], next_level, destination, magic_number, visited) do
-    IO.puts "* Level #{next_level |> hd |> elem(0) |> length}: #{length(next_level)} positions to check."
+    IO.puts "* Level #{next_level |> hd |> elem(0) |> length}: #{length(next_level)} positions to check. Visited nodes: #{map_size(visited)}"
     do_search(next_level, [], destination, magic_number, visited)
   end
 
@@ -35,10 +35,10 @@ defmodule Advent.Day13 do
       false ->
         # Drastically cut down on the number of positions in memory, by recording *all* visited positions
         # If we see a position twice, the earlier one was clearly more optimal so disregard future references to it.
-        case Map.get(visited, position, false) do
+        case visited_node?(position, visited) do
           true -> do_search([{path, positions} | alt_paths], next_level, destination, magic_number, visited)
           false ->
-            visited = Map.put(visited, position, true)
+            visited = record_visit(position, visited)
             do_search(
               [{path, positions} | alt_paths],
               [{[position | path], Position.legal_moves(position, magic_number)} | next_level],
@@ -49,4 +49,8 @@ defmodule Advent.Day13 do
         end
     end
   end
+
+  defp empty_visited_list, do: Map.new
+  defp visited_node?(node, list), do: Map.get(list, node, false)
+  defp record_visit(node, list), do: Map.put(list, node, true)
 end
