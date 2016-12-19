@@ -1,11 +1,15 @@
 defmodule Advent.Day14 do
+  alias Advent.Day14.Cache
+
   @salt "zpqevtbw"
 
   def part1 do
+    Cache.start_link
     look_for_key(0, %{}, &hash/2)
   end
 
   def part2 do
+    Cache.start_link
     look_for_key(0, %{}, &super_hash/2)
   end
 
@@ -45,7 +49,7 @@ defmodule Advent.Day14 do
   true
   """
   def key?(index, salt, hash_fn) do
-    {is_triple, letter} = hash_fn.(index, salt) |> is_triple?
+    {is_triple, letter} = Cache.hash(index, salt, hash_fn) |> is_triple?
 
     is_triple && check_for_five_char_sequence(index, salt, letter, hash_fn)
   end
@@ -59,7 +63,7 @@ defmodule Advent.Day14 do
 
   def check_for_five_char_sequence(index, salt, letter, hash_fn) do
     Enum.any?(index+1..index+1000, fn(new_index) ->
-      hash_fn.(new_index, salt) |> has_five_char_sequence?(letter)
+      Cache.hash(new_index, salt, hash_fn) |> has_five_char_sequence?(letter)
     end)
   end
 
